@@ -9,9 +9,15 @@ jobs:
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v2.3.4
+        
+      - name: Set Node Enviroment
+        uses: actions/setup-node@v2
+        with:
+             node-version: '14'
 
       - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
         run: |
+          npm install -g npm@latest
           npm install
           npm run build
 

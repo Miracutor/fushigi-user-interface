@@ -1,0 +1,16 @@
+.subtitle-text {
+    font-family: "PT Sans", sans-serif;
+    font-size: 30px;
+    color: #ffffff;
+    font-weight: 700;
+    width: 80%;
+    position: sticky;
+    bottom: 80px;
+    z-index: 1050;
+}
+
+.subtitle-text span {
+    padding-left: 12px;
+    padding-right: 12px;
+    background-color: #000000
+}

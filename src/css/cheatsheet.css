@@ -1,0 +1,8 @@
+.cheat-card {
+    position: sticky;
+    left: 78vw;
+    right: 5vw;
+    bottom: 14vh;
+    width: 18rem;
+    z-index: 1030;
+}

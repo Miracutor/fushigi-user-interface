@@ -1,0 +1,16 @@
+body {
+    overflow: hidden;
+    background-color: #fffdd0;
+}
+
+.live2d-viewer {
+    width: 100vw;
+    height: 100vh;
+}
+
+.speak-btn {
+    position: sticky;
+    left: 35px;
+    bottom: 30px;
+    z-index: 1030;
+}

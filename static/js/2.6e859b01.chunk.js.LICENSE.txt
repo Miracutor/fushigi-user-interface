@@ -54,14 +54,6 @@ object-assign
  */
 
 /*!
- * @pixi/runner - v5.3.9
- * Compiled Wed, 24 Mar 2021 19:54:16 UTC
- *
- * @pixi/runner is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-
-/*!
  * @pixi/settings - v5.3.9
  * Compiled Wed, 24 Mar 2021 19:54:16 UTC
  *

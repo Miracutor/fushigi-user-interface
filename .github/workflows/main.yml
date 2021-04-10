@@ -15,7 +15,7 @@ jobs:
         with:
              node-version: '14'
              
-      - name: Update npm to veraion 7
+      - name: Update npm to version 7
         run: |
           npm install -g npm@latest   
 
@@ -23,6 +23,7 @@ jobs:
         env:
           CI: false
         run: |
+          echo npm version "$(npm --version)"
           npm install
           npm run build
 

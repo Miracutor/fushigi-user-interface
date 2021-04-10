@@ -1,7 +1,8 @@
 {
   "name": "fushigi-user-interface",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "homepage": "https://miracutor.github.io/fushigi-user-interface",
   "dependencies": {
     "@pixi/app": "^5.3.9",
     "@testing-library/jest-dom": "^5.11.10",

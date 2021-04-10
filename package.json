@@ -1,24 +1,14 @@
 {
   "name": "fushigi-user-interface",
   "version": "0.1.0",
-  "homepage": "https://miracutor.github.io/fushigi-user-interface",
-  "private": false,
+  "private": true,
   "dependencies": {
-    "@pixi/app": "^5.3.9",
-    "@pixi/core": "^5.3.9",
-    "@pixi/display": "^5.3.9",
-    "@pixi/loaders": "^5.3.9",
-    "@pixi/math": "^5.3.9",
-    "@pixi/sprite": "^5.3.9",
-    "@pixi/utils": "^5.3.9",
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
     "bootstrap": "^4.6.0",
-    "jquery": "^3.6.0",
     "microsoft-cognitiveservices-speech-sdk": "^1.16.0",
     "pixi-live2d-display": "^0.3.1",
-    "popper.js": "^1.16.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
@@ -50,8 +40,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@babel/core": "^7.13.15"
   }
 }

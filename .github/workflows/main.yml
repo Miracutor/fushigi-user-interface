@@ -10,7 +10,7 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2.3.4
         
-      - name: Set Node Enviroment
+      - name: Set Node Environment
         uses: actions/setup-node@v2
         with:
              node-version: '14'
@@ -19,6 +19,7 @@ jobs:
         env:
           CI: false
         run: |
+          npm install -g npm@latest
           npm install
           npm run build
 

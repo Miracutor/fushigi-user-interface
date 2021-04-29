@@ -6,9 +6,9 @@ const CheatSheet = () => {
     <div className="cheat-card">
       <div className="card">
         <div className="card-body">
-          <h5 className="card-title">Cheat Sheet</h5>
+          <h5 className="card-title">Quick Guide</h5>
           <h6 className="card-subtitle mb-2 text-muted">
-            Quick guide to get started using the system
+            Simple guide to get started using the system
           </h6>
           <ul className="list-group card-text">
             <li className="list-group-item">

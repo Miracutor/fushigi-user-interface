@@ -1,5 +1,5 @@
 import useAssistant from "../RasaAssistant";
-import useSpeechRecognize from "./SpeakRecognize";
+import useSpeechRecognize from "./SpeakRecognizeBeta";
 import useSpeechSynthesis from "./SpeakSynthesisBeta";
 
 export const useVoiceModule = (playSound) => {

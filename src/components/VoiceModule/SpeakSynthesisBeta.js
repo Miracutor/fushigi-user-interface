@@ -1,10 +1,8 @@
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import useAsyncQueue from "use-async-queue";
 import * as sdk from "microsoft-cognitiveservices-speech-sdk";
 
-const useSpeechSynthesis = (
-  speakFunc = () => null
-) => {
+const useSpeechSynthesis = (speakFunc = () => null) => {
   const { add } = useAsyncQueue({
     concurrency: 1,
   });
@@ -45,6 +43,15 @@ const useSpeechSynthesis = (
     });
   };
 
+  const generateSSML = (text) => {
+    const ssml = `<speak version="1.0" xmlns="https://www.w3.org/2001/10/synthesis" xml:lang="en-US">
+  <voice name="en-US-GuyRUS">
+    ${text}
+  </voice>
+</speak>`;
+    return ssml;
+  };
+
   const synthesizeSpeech = (text = "") => {
     return new Promise((resolve, reject) => {
       const speechConfig = sdk.SpeechConfig.fromSubscription(
@@ -53,8 +60,8 @@ const useSpeechSynthesis = (
       );
       const audioConfig = null;
       const synthesizer = new sdk.SpeechSynthesizer(speechConfig, audioConfig);
-      synthesizer.speakTextAsync(
-        text,
+      synthesizer.speakSsmlAsync(
+        generateSSML(text),
         (result) => {
           synthesizer.close();
           resolve(result.audioData);

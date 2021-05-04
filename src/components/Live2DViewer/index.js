@@ -3,7 +3,6 @@ import "../../css/live2dviewer.css";
 import { Application } from "@pixi/app";
 import { Ticker, TickerPlugin } from "@pixi/ticker";
 import { Live2DModel } from "pixi-live2d-display/lib/cubism4";
-import useAudioMeasure from "../AudioMeasure";
 import useAsyncEffect from "use-async-effect";
 import Subtitle from "../Subtitle";
 import useVoiceModule from "../VoiceModule";
@@ -18,8 +17,7 @@ const Live2DViewer = () => {
   const appRef = useRef();
   const modelRef = useRef();
 
-  const { playSoundOmega, getAudioLevel } = useAudioMeasure();
-  const { getText, startRecognize } = useVoiceModule(playSoundOmega);
+  const { getText, getAudioLevel, startRecognize } = useVoiceModule();
 
   useAsyncEffect(async () => {
     appRef.current = new Application({

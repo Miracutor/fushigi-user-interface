@@ -1,97 +1,150 @@
-import {useEffect, useReducer, useRef} from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import useAsyncQueue from "use-async-queue";
+import * as sdk from "microsoft-cognitiveservices-speech-sdk";
 
-const useSpeechSynthesis = (language = "en-US", voiceName = "Google") => {
+const useSpeechSynthesis = () => {
   const { add } = useAsyncQueue({
     concurrency: 1,
   });
-  const synthesis = useRef(window.speechSynthesis);
-  const [state, dispatch] = useReducer(
-    (state, action) => {
-      switch (action.type) {
-        case "loadVoice":
-          return (state.voice = action.payload);
-        case "setText":
-          return (state.text = action.payload);
-        default:
-          throw new Error("Unexpected action");
-      }
-    },
-    { voice: null, text: "" },
-    undefined
-  );
-  const voiceRef = useRef(null);
-  const textRef = useRef("");
 
-  useEffect(() => {
-    voiceRef.current = state.voice;
-    textRef.current = state.text;
-  }, [state]);
-
-  useEffect(() => {
-    if ("speechSynthesis" in window) {
-      try {
-        const voices = synthesis.current.getVoices();
-
-        for (let i = 0; i < voices.length; i++) {
-          if (
-            voices[i].lang === language &&
-            voices[i].name.includes(voiceName)
-          ) {
-            setVoice(voices[i]);
-            break;
-          }
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    } else {
-      console.log("Speech synthesis not supported 😢");
+  const [id, setId] = useState(0);
+  const [text, setText] = useState("");
+  const [audioLevel, dispatch] = useReducer((state, action) => {
+    switch (action.type) {
+      case "set":
+        return action.payload;
+      case "reset":
+        return 0.0;
+      default:
+        throw new Error("Unexpected action");
     }
-  }, []);
+  }, 0.0);
+
+  const idRef = useRef(0);
+  const textRef = useRef("");
+  const audioLevelRef = useRef(0);
+
+  useEffect(() => {
+    audioLevelRef.current = audioLevel;
+  }, [audioLevel]);
+
+  const getAudioLevel = () => {
+    return audioLevelRef.current;
+  };
+
+  useEffect(() => {
+    idRef.current = id;
+  }, [id]);
+
+  useEffect(() => {
+    textRef.current = text;
+  }, [text]);
+
+  const getId = () => {
+    return idRef.current;
+  };
 
   const getText = () => {
     return textRef.current;
   };
 
-  const getVoice = () => {
-    return voiceRef.current;
+  const incrementId = () => {
+    setId(id + 1);
   };
 
-  const setText = (text) => {
-    dispatch({ type: "setText", payload: text });
+  const generateSSML = (text) => {
+    const ssml = `<speak version="1.0" xmlns="https://www.w3.org/2001/10/synthesis" xml:lang="en-US">
+  <voice name="en-US-GuyRUS">
+    ${text}
+  </voice>
+</speak>`;
+    return ssml;
   };
 
-  const setVoice = (voice) => {
-    dispatch({ type: "loadVoice", payload: voice });
+  const synthesizeSpeech = (text = "") => {
+    return new Promise((resolve, reject) => {
+      const speechConfig = sdk.SpeechConfig.fromSubscription(
+        "6a15144b41b74b66bd68b9d11d2ba8cd",
+        "southeastasia"
+      );
+      const audioConfig = null;
+      const synthesizer = new sdk.SpeechSynthesizer(speechConfig, audioConfig);
+      synthesizer.speakSsmlAsync(
+        generateSSML(text),
+        (result) => {
+          synthesizer.close();
+          resolve(result.audioData);
+        },
+        (error) => {
+          console.log(error);
+          synthesizer.close();
+          reject(error);
+        }
+      );
+    });
   };
 
-  const speakSynthesis = (text = "") => {
-    add({
-      id: "",
-      task: () => {
-        return new Promise((resolve, reject) => {
-          setText("[Bot]: " + text);
-          const newUtter = new SpeechSynthesisUtterance(text);
-          newUtter.voice = getVoice();
-          newUtter.pitch = 1;
-          newUtter.rate = 1;
-          newUtter.onend = () => {
-            setText("");
-            resolve();
-          };
-          newUtter.onerror = (event) => {
-            reject(event.error);
-          };
-          console.log(
-            "Speak: " + text + " [Voice: " + newUtter.voice.name + "]"
-          );
-          synthesis.current.speak(newUtter);
+  const playSpeech = (promise, text) => {
+    return new Promise((resolve, reject) => {
+      const audioContext = new AudioContext();
+      promise.then((audioData) => {
+        const audioBlob = new Blob([audioData], {
+          type: "audio/wav",
         });
+        const audioElement = new Audio(window.URL.createObjectURL(audioBlob));
+        audioElement.play().then(() => {
+          setText(text);
+          const audioStream = audioElement.captureStream();
+          const analyser = audioContext.createAnalyser();
+          const source = audioContext.createMediaStreamSource(audioStream);
+          const pcmData = new Float32Array(analyser.fftSize);
+          let frameId;
+
+          source.connect(analyser);
+          const render = () => {
+            analyser.getFloatTimeDomainData(pcmData);
+            let sumSquares = 0.0;
+            for (let amplitude of pcmData) {
+              sumSquares += amplitude * amplitude;
+            }
+            dispatch({
+              type: "set",
+              payload: (Math.sqrt(sumSquares / pcmData.length) * 5).toFixed(1),
+            });
+            frameId = requestAnimationFrame(render);
+          };
+          render();
+
+          audioElement.addEventListener("ended", () => {
+            setText("");
+            source.disconnect();
+            analyser.disconnect();
+            cancelAnimationFrame(frameId);
+            audioElement.pause();
+            audioElement.removeAttribute("src");
+            audioElement.remove();
+            dispatch({ type: "reset" });
+            resolve();
+          });
+          audioElement.addEventListener("error", () => {
+            reject();
+          });
+        });
+      });
+    });
+  };
+
+  const speakSynthesis = (subtitle = "") => {
+    incrementId();
+    add({
+      id: getId(),
+      task: () => {
+        return playSpeech(synthesizeSpeech(subtitle), subtitle);
       },
     });
   };
-  return { speakSynthesis, getText };
+
+  return { speakSynthesis, getText, getAudioLevel };
 };
 
 export default useSpeechSynthesis;

@@ -1,7 +1,7 @@
-import {useEffect, useReducer, useRef, useState} from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
+import * as sdk from "microsoft-cognitiveservices-speech-sdk";
 
 const useSpeechRecognize = (onResult = () => null, onNoMatch = () => null) => {
-  const [recognition, setRecognition] = useState(null);
   const [transcript, setTranscript] = useState(null);
   const [listening, dispatchListen] = useReducer(
     (state, action) => {
@@ -23,67 +23,42 @@ const useSpeechRecognize = (onResult = () => null, onNoMatch = () => null) => {
     listenRef.current = listening;
   }, [listening]);
 
-  useEffect(() => {
-    if ("speechSynthesis" in window) {
-      try {
-        // new speech recognition object
-        const SpeechRecognition =
-          typeof window !== "undefined" &&
-          (window.SpeechRecognition || window.webkitSpeechRecognition);
-
-        const recognizeObj = new SpeechRecognition();
-
-        setRecognition(recognizeObj);
-
-        recognizeObj.onstart = () => {
-          console.log("Voice recognition started.");
-          dispatchListen({ type: "start" });
-        };
-
-        recognizeObj.onresult = (event) => {
-          let final_transcript = "";
-          for (let i = event.resultIndex; i < event.results.length; ++i) {
-            if (event.results[i].isFinal) {
-              final_transcript += event.results[i][0].transcript;
-            }
-          }
-
-          dispatchListen({ type: "stop" });
-
-          console.log("Final result: " + final_transcript);
-
-          setTranscript(final_transcript);
-          onResult(final_transcript);
-        };
-
-        recognizeObj.onnomatch = () => {
-          console.log("No match found.");
-          onNoMatch();
-        };
-
-        recognizeObj.onerror = () => {
-          console.log("No match found.");
-          onNoMatch();
-        };
-
-        setRecognition(recognizeObj);
-      } catch (e) {
-        console.log(e);
-      }
-    } else {
-      console.log("Speech recognition not supported 😢");
-    }
-  }, []);
-
   const startRecognize = () => {
-    recognition.start();
+    return new Promise((resolve, reject) => {
+      const speechConfig = sdk.SpeechConfig.fromSubscription(
+        "6a15144b41b74b66bd68b9d11d2ba8cd",
+        "southeastasia"
+      );
+      const audioConfig = sdk.AudioConfig.fromDefaultMicrophoneInput();
+      const recognizer = new sdk.SpeechRecognizer(speechConfig, audioConfig);
+
+      console.log("Voice recognition started.");
+      dispatchListen({ type: "start" });
+
+      recognizer.recognizeOnceAsync((result) => {
+        let final_transcript;
+        if (result.reason === sdk.ResultReason.RecognizedSpeech) {
+          final_transcript = result.text;
+        } else {
+          final_transcript =
+            "Speech was cancelled or could not be recognized. Ensure your microphone is working properly.";
+          onNoMatch();
+          reject();
+        }
+        dispatchListen({ type: "stop" });
+        console.log("Final result: " + final_transcript);
+        setTranscript(final_transcript);
+        onResult(final_transcript);
+        resolve();
+      });
+    });
   };
 
   const getListening = () => {
     return listenRef.current;
   };
 
-  return { recognition, transcript, startRecognize, getListening };
+  return { transcript, startRecognize, getListening };
 };
 
 export default useSpeechRecognize;

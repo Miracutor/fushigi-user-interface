@@ -1,8 +1,8 @@
 import useAssistant from "../RasaAssistant";
-import useSpeechRecognize from "./SpeakRecognizeBeta";
-import useSpeechSynthesis from "./SpeakSynthesisBeta";
+import useSpeechRecognize from "./SpeakRecognize";
+import useSpeechSynthesis from "./SpeakSynthesis";
 
-export const useVoiceModule = (playSound) => {
+export const useVoiceModule = () => {
   const { send, triggerRestartSession } = useAssistant({
     sockUrl: "http://localhost:5005/socket.io/",
     sockOpts: { transports: ["websocket"] },
@@ -25,10 +25,10 @@ export const useVoiceModule = (playSound) => {
     handleNewUserMessage,
     handleNoMatchRecoginition
   );
-  //const { speakSynthesis, getText } = useSpeechSynthesis("en-US", "Microsoft");
-  const { speakSynthesis, getText } = useSpeechSynthesis(playSound);
 
-  return { getText, startRecognize, triggerRestartSession };
+  const { speakSynthesis, getText, getAudioLevel } = useSpeechSynthesis();
+
+  return { getText, getAudioLevel, startRecognize, triggerRestartSession };
 };
 
 export default useVoiceModule;

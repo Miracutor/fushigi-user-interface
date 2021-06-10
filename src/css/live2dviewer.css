@@ -14,3 +14,26 @@ body {
     bottom: 30px;
     z-index: 1030;
 }
+
+.usm_logo {
+    position: sticky;
+    color: white;
+    width: 200px;
+    left: 1vw;
+    bottom: 90vh;
+    z-index: 1030;
+    text-align: center;
+}
+
+.usm_logo .title {
+    font-size: 20px;
+}
+
+.usm_logo .subtitle {
+    font-size: 14px;
+}
+
+.usm_logo img {
+    max-width: 200px;
+    max-height: 200px;
+}

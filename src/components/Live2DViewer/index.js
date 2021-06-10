@@ -7,6 +7,7 @@ import useAsyncEffect from "use-async-effect";
 import Subtitle from "../Subtitle";
 import useVoiceModule from "../VoiceModule";
 import CheatSheet from "../CheatSheet";
+import USMLogo from "../USMLogo";
 
 Application.registerPlugin(TickerPlugin);
 Live2DModel.registerTicker(Ticker);
@@ -23,7 +24,7 @@ const Live2DViewer = () => {
     appRef.current = new Application({
       view: canvasRef.current,
       autoStart: true,
-      backgroundColor: 0xffe79e,
+      backgroundColor: 0xb19cd9, //0xffe79e,
       resizeTo: containerRef.current,
     });
     await Live2DModel.from("chitose/chitose.model3.json").then((model) => {
@@ -54,11 +55,12 @@ const Live2DViewer = () => {
     <div className="live2d-viewer" ref={containerRef}>
       <canvas ref={canvasRef} />
       <Subtitle text={getText()} />
+      <USMLogo />
       <button
-        className="btn btn-lg btn-primary speak-btn"
+        className="btn btn-lg btn-outline-dark speak-btn"
         onClick={handleClick}
       >
-        SPEAK
+        <b>SPEAK</b>
       </button>
       <CheatSheet />
     </div>

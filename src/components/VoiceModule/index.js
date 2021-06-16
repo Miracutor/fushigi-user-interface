@@ -21,14 +21,20 @@ export const useVoiceModule = () => {
     speakSynthesis(message);
   };
 
-  const { startRecognize } = useSpeechRecognize(
+  const { startRecognize, getListening } = useSpeechRecognize(
     handleNewUserMessage,
     handleNoMatchRecoginition
   );
 
   const { speakSynthesis, getText, getAudioLevel } = useSpeechSynthesis();
 
-  return { getText, getAudioLevel, startRecognize, triggerRestartSession };
+  return {
+    getText,
+    getAudioLevel,
+    startRecognize,
+    triggerRestartSession,
+    getListening,
+  };
 };
 
 export default useVoiceModule;

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import "../../css/live2dviewer.css";
 import { Application } from "@pixi/app";
 import { Ticker, TickerPlugin } from "@pixi/ticker";
@@ -17,15 +17,22 @@ const Live2DViewer = () => {
   const canvasRef = useRef();
   const appRef = useRef();
   const modelRef = useRef();
+  const [forOnce, setForOnce] = useState(false);
 
-  const { getText, getAudioLevel, startRecognize } = useVoiceModule();
+  const {
+    getText,
+    getAudioLevel,
+    startRecognize,
+    getListening,
+  } = useVoiceModule();
 
   useAsyncEffect(async () => {
     appRef.current = new Application({
       view: canvasRef.current,
       autoStart: true,
-      backgroundColor: 0xb19cd9, //0xffe79e,
+      /*backgroundColor: 0xb19cd9,*/
       resizeTo: containerRef.current,
+      transparent: true,
     });
     await Live2DModel.from("chitose/chitose.model3.json").then((model) => {
       model.scale.set(0.3);
@@ -51,17 +58,26 @@ const Live2DViewer = () => {
     startRecognize();
   };
 
+  console.log(getListening());
+
   return (
     <div className="live2d-viewer" ref={containerRef}>
       <canvas ref={canvasRef} />
       <Subtitle text={getText()} />
       <USMLogo />
+      <div className="card speak-tutor" hidden={forOnce}>
+        Select this button and say "Hi" to begin conversation!
+      </div>
       <button
-        className="btn btn-lg btn-outline-dark speak-btn"
-        onClick={handleClick}
+        className="btn btn-lg btn-light speak-btn"
+        onClick={(e) => {
+          setForOnce(true);
+          handleClick(e);
+        }}
       >
         <b>SPEAK</b>
       </button>
+
       <CheatSheet />
     </div>
   );

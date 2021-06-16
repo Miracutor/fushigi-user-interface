@@ -1,6 +1,8 @@
 body {
     overflow: hidden;
-    background-color: #fffdd0;
+    background-image: url('../img/csb.jpg');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
 }
 
 .live2d-viewer {
@@ -12,6 +14,14 @@ body {
     position: sticky;
     left: 35px;
     bottom: 30px;
+    z-index: 1030;
+}
+
+.speak-tutor{
+    position: sticky;
+    width: 400px;
+    left: 10vw;
+    bottom: 6vh;
     z-index: 1030;
 }
 

@@ -19,12 +19,8 @@ const Live2DViewer = () => {
   const modelRef = useRef();
   const [forOnce, setForOnce] = useState(false);
 
-  const {
-    getText,
-    getAudioLevel,
-    startRecognize,
-    getListening,
-  } = useVoiceModule();
+  const { getText, getAudioLevel, startRecognize, getListening } =
+    useVoiceModule();
 
   useAsyncEffect(async () => {
     appRef.current = new Application({
@@ -50,6 +46,7 @@ const Live2DViewer = () => {
       modelRef.current = model;
 
       appRef.current.stage.children[0].x = appRef.current.stage.width / 2;
+      appRef.current.stage.children[0].y = appRef.current.stage.height * 0.05;
     });
   }, []);
 
@@ -66,7 +63,7 @@ const Live2DViewer = () => {
       <Subtitle text={getText()} />
       <USMLogo />
       <div className="card speak-tutor" hidden={forOnce}>
-        Select this button and say "Hi" to begin conversation!
+        &nbsp;&#8592;&nbsp;Click this button and say "Hi" to begin conversation!
       </div>
       <button
         className="btn btn-lg btn-light speak-btn"

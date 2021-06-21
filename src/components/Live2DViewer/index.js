@@ -26,7 +26,7 @@ const Live2DViewer = () => {
     appRef.current = new Application({
       view: canvasRef.current,
       autoStart: true,
-      /*backgroundColor: 0xb19cd9,*/
+      // backgroundColor: 0xb19cd9,
       resizeTo: containerRef.current,
       transparent: true,
     });
@@ -54,8 +54,6 @@ const Live2DViewer = () => {
     e.preventDefault();
     startRecognize();
   };
-
-  console.log(getListening());
 
   return (
     <div className="live2d-viewer" ref={containerRef}>

@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/fushigi-user-interface/static/css/main.028e44b0.chunk.css",
-    "main.js": "/fushigi-user-interface/static/js/main.7b5264da.chunk.js",
-    "main.js.map": "/fushigi-user-interface/static/js/main.7b5264da.chunk.js.map",
+    "main.js": "/fushigi-user-interface/static/js/main.501c38f8.chunk.js",
+    "main.js.map": "/fushigi-user-interface/static/js/main.501c38f8.chunk.js.map",
     "runtime-main.js": "/fushigi-user-interface/static/js/runtime-main.9b2e0d65.js",
     "runtime-main.js.map": "/fushigi-user-interface/static/js/runtime-main.9b2e0d65.js.map",
     "static/css/2.4c97ca4f.chunk.css": "/fushigi-user-interface/static/css/2.4c97ca4f.chunk.css",
@@ -20,6 +20,6 @@
     "static/css/2.4c97ca4f.chunk.css",
     "static/js/2.b74195ce.chunk.js",
     "static/css/main.028e44b0.chunk.css",
-    "static/js/main.7b5264da.chunk.js"
+    "static/js/main.501c38f8.chunk.js"
   ]
 }
